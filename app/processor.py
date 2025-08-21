@@ -2,25 +2,23 @@ import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 class Process:
-    def __init__(self,text):
-        self.text = text
+    def __init__(self,data_frame):
+        self.df = data_frame
+        self.df["rarest_word"] = self.df["text"].apply(self.rarest_word)
+        self.df["sentiment"] = self.df["text"].apply(self.sentiment_type)
+        self.df["weapon_detected"] = self.df["text"].apply(self.weapon_blacklist)
 
 # Finding the rarest word in any text
-    def rarest_word(self):
-        words = self.text.split()
-        word_count = {}
-        for word in words:
-            word = word.lower()
-            if word not in word_count:
-                word_count[word] = 0
-            word_count[word] += 1
-        rarest = min(word_count, key=word_count.get)
+    def rarest_word(self,text):
+        all_words = text.split()
+        words_count = {word: all_words.count(word) for word in all_words}
+        rarest = min(words_count, key=words_count.get)
         return rarest
 
 # Finding the sentiment of the text - positive, negative, or neutral.
-    def sentiment_type(self):
+    def sentiment_type(self,text):
         nltk.download('vader_lexicon')
-        score = SentimentIntensityAnalyzer().polarity_scores(self.text)
+        score = SentimentIntensityAnalyzer().polarity_scores(text)
         if score['compound'] >= 0.05:
             return 'positive'
         elif score['compound'] <= -0.05:
@@ -29,7 +27,11 @@ class Process:
             return 'neutral'
 
 # Finding names of weapons according to a blacklist.
-    def weapon_blacklist(self):
+    def weapon_blacklist(self,text):
         weapons = "data/weapon_list.txt"
-        found_weapons = [weapon for weapon in weapons if weapon in self.text.lower()]
+        found_weapons = [weapon for weapon in weapons if weapon in text.lower()]
         return found_weapons[0] if found_weapons else None
+
+# Returning the processed data frame
+    def get_processed_data(self):
+        return self.df

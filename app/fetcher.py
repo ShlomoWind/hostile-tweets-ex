@@ -1,3 +1,4 @@
+import pandas as pd
 import os
 from pymongo import MongoClient
 
@@ -12,5 +13,8 @@ class Connection:
         self.db = self.client[self.db_name]
         self.collection = self.db[self.col_name]
 
-    def get_all_data(self):
-        return list(self.collection.find({}))
+#Returning the data frame from the MongoDB collection
+    def get_data_frame(self):
+        data = self.collection.find()
+        df = pd.DataFrame(list(data))
+        return df
