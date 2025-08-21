@@ -27,8 +27,9 @@ class Process:
             return 'neutral'
 
 # Finding names of weapons according to a blacklist.
-    def weapon_blacklist(self,text):
-        weapons = "data/weapon_list.txt"
+    def weapon_blacklist(self, text):
+        with open("data/weapon_list.txt", "r") as f:
+            weapons = [line.strip().lower() for line in f.readlines()]
         found_weapons = [weapon for weapon in weapons if weapon in text.lower()]
         return found_weapons[0] if found_weapons else None
 

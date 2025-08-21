@@ -1,6 +1,13 @@
-import manager
+from fastapi import FastAPI
+from app.manager import Manager
+import uvicorn
 
-start = manager.Manager()
+start = Manager()
+app = FastAPI()
 
-if __name__ == "__main__":
-    start.run()
+@app.get("/processed_data")
+def get_processed_data():
+    try:
+        return start.run()
+    except Exception as e:
+        return {"error": str(e)}

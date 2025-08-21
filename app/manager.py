@@ -1,5 +1,5 @@
-import fetcher
-import processor
+from app import fetcher
+from app import processor
 
 class Manager:
     def __init__(self):
@@ -8,4 +8,4 @@ class Manager:
 
     def run(self):
         processed_data = self.processor.get_processed_data()
-        print(processed_data)
+        return processed_data.to_dict(orient='records')
