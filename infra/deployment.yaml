@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sh-z-wind-dev
+  name: shlomo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shlomo
+  template:
+    metadata:
+      labels:
+        app: shlomo
+    spec:
+      containers:
+      - name: shlomo-container
+        image: shlomowind/my-mongo-image:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_URL
+          valueFrom:
+            secretKeyRef:
+              name: shlomo-secret
+              key: mongo_url
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: shlomo-secret
+              key: db_name
+        - name: COLLECTION_NAME
+          valueFrom:
+            secretKeyRef:
+                name: shlomo-secret
+                key: collection_name
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: shlomo-secret
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shlomo-secret
+              key: password
