@@ -16,5 +16,9 @@ class Connection:
 #Returning the data frame from the MongoDB collection
     def get_data_frame(self):
         data = self.collection.find()
-        df = pd.DataFrame(list(data))
+        data_list = []
+        for doc in data:
+            doc["_id"] = str(doc["_id"])
+            data_list.append(doc)
+        df = pd.DataFrame(data_list)
         return df
