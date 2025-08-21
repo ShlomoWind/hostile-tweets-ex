@@ -4,9 +4,10 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 class Process:
     def __init__(self,data_frame):
         self.df = data_frame
-        self.df["rarest_word"] = self.df["text"].apply(self.rarest_word)
-        self.df["sentiment"] = self.df["text"].apply(self.sentiment_type)
-        self.df["weapon_detected"] = self.df["text"].apply(self.weapon_blacklist)
+        self.df["rarest_word"] = self.df["Text"].apply(self.rarest_word)
+        self.df["sentiment"] = self.df["Text"].apply(self.sentiment_type)
+        self.df["weapon_detected"] = self.df["Text"].apply(self.weapon_blacklist)
+        nltk.download('vader_lexicon')
 
 # Finding the rarest word in any text
     def rarest_word(self,text):
@@ -17,7 +18,6 @@ class Process:
 
 # Finding the sentiment of the text - positive, negative, or neutral.
     def sentiment_type(self,text):
-        nltk.download('vader_lexicon')
         score = SentimentIntensityAnalyzer().polarity_scores(text)
         if score['compound'] >= 0.05:
             return 'positive'

@@ -8,4 +8,4 @@ class Manager:
 
     def run(self):
         processed_data = self.processor.get_processed_data()
-        return processed_data
+        print(processed_data)
